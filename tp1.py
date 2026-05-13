@@ -1,5 +1,6 @@
 import json
 import pandas as pd
+import heapq
 
 from datetime import datetime, timedelta
 
@@ -25,6 +26,16 @@ class Mapa:
             self.mapa[zone_name]["pessoas"]: dict[int, Pessoa] = dict() # type: ignore
         
 
+        # Matriz dos tempos entre zonas
+        self.tempos = {}
+
+        for origem in self.mapa.keys():
+            self.tempos[origem] = {}
+
+            for destino in self.mapa.keys():
+                self.tempos[origem][destino] = self.dijkstra(origem, destino)
+
+
         self.zonas_ativas: dict[str, dict] = dict()
         """
         Lista de Nodes que têm la alguem
@@ -36,7 +47,65 @@ class Mapa:
          cujas, ATÉ entrarem noutra zona com sucesso, ficam aqui.
 
         """
+    
+    def precalcular_tempos(self):
+        tempos = {}
 
+        for origem in self.mapa.keys():
+            tempos[origem] = {}
+
+            for destino in self.mapa.keys():
+                tempos[origem][destino] = self.dijkstra(origem, destino)
+
+        return tempos
+
+    
+    def dijkstra(self, origem: str, destino: str) -> float:
+        """
+        Calcula o menor tempo de caminhada entre duas zonas usando o
+         algoritmo de Dijkstra.
+        """
+        # Mesmo ponto
+        if origem == destino:
+            return 0
+
+        # (tempo_acumulado, zona)
+        fila_prioridade = [(0, origem)]
+
+        # Zonas já processadas
+        zonas_visitadas = set()
+
+        while fila_prioridade:
+
+            # Zona com menor custo atual
+            tempo_atual, zona_atual = heapq.heappop(fila_prioridade)
+
+            # Ignorar se já foi visitada
+            if zona_atual in zonas_visitadas:
+                continue
+
+            zonas_visitadas.add(zona_atual)
+
+            # Encontrou o destino
+            if zona_atual == destino:
+                return tempo_atual
+
+            # Explorar vizinhos
+            vizinhos = self.mapa[zona_atual].get("walk_seconds", {})
+            for zona_vizinha, tempo_caminhada in vizinhos.items():
+
+                if zona_vizinha in zonas_visitadas:
+                    continue
+
+                novo_tempo = tempo_atual + tempo_caminhada
+
+                heapq.heappush(
+                    fila_prioridade,
+                    (novo_tempo, zona_vizinha)
+                )
+
+        # Não existe caminho possível
+        return float("inf")
 
 
     def diferenca_tempo(self, pessoa_evento: Pessoa , pessoa: Pessoa) -> int:
@@ -52,8 +121,12 @@ class Mapa:
 
         timestamp_diff = abs((timestamp_evento - timestamp_pessoa).total_seconds())
         
-        #   Tempo que demora entre as duas zonas
-        base_time = self.mapa[pessoa.last_zone]["walk_seconds"][pessoa_evento.last_zone]
+        #   Tempo que demora entre as duas zonas (somando percursos intermédios)
+        base_time = self.tempos[pessoa.last_zone][pessoa_evento.last_zone]
+        
+        # Se for infinito, significa que não há caminho possível entre as zonas
+        if base_time == float('inf'):
+            return 0 
         
         #   Diferença do esperado
         erro = abs(timestamp_diff - base_time)
@@ -116,9 +189,6 @@ class Mapa:
                 if pessoa.last_event == "linger":
                     return 0
 
-                if pessoa.last_event == "entry":
-                    return 0
-
                 if pessoa_evento.last_zone == pessoa.last_zone:
                     return 30
 
@@ -133,26 +203,41 @@ class Mapa:
 
         return pontuacao_total
 
-    def procurar_pessoa_arredores(self, evento: dict) -> tuple[int, Pessoa]:
+    def procurar_pessoa_arredores(self, evento: dict, saltos_maximos=2) -> tuple[int, Pessoa]:
         """
-        Procura a pessoa mais legivel á do evento com base nas zonas que
-         rodeiam a zona do evento
+        Procura a pessoa mais legível à do evento com base nas zonas que
+        rodeiam a zona do evento, até um determinado número de saltos (profundidade).
         """
-        zona_atual = self.mapa[evento.zone_id]
+        zona_atual_id = evento.zone_id
         pessoa_evento = Pessoa(evento)
         pessoa_corr = None, None
-
-        #Alguem entrou noutra zona
         maior_score = 0
 
-        # Iterar pelas zonas adjacentes à procura da pessoa
-        for nome_zona in zona_atual["adjacent"]:
-                    
-            #Zona não tem ninguém, skip
+        # 1. Obter zonas candidatas (Busca em Largura / BFS)
+        zonas_candidatas = set()
+        fila = [(zona_atual_id, 0)] # Tuplo: (id_da_zona, distancia_em_saltos)
+        visitados = set([zona_atual_id])
+
+        while fila:
+            zona_id, saltos = fila.pop(0)
+            
+            # Adiciona a zona atual às candidatas (exceto a zona onde o evento ocorreu)
+            if saltos > 0:
+                zonas_candidatas.add(zona_id)
+            
+            # Se ainda não atingimos o limite de saltos, expandimos para os vizinhos
+            if saltos < saltos_maximos:
+                for vizinho in self.mapa[zona_id].get("adjacent", []):
+                    if vizinho not in visitados:
+                        visitados.add(vizinho)
+                        fila.append((vizinho, saltos + 1))
+
+        # 2. Procurar por pessoas nas zonas candidatas
+        for nome_zona in zonas_candidatas:
+            # Zona não tem ninguém ativo, avançar
             if nome_zona not in self.zonas_ativas:
                 continue
 
-            # Procurar por pessoas em zonas ativas
             for id, pessoa in self.mapa[nome_zona]["pessoas"].items():
                 score_pessoa = self.calc_corresp_pessoa(pessoa_evento, pessoa)
                 if score_pessoa > maior_score:
@@ -231,13 +316,13 @@ if __name__ == "__main__":
             pessoa_corr = loja.procurar_pessoa_arredores(evento)
 
     
-            if evento.event_type in ["linger", "exit"]:
-                maior_score = 0
-                for id, pessoa in zona_atual["pessoas"].items():
-                    score_pessoa = loja.calc_corresp_pessoa(pessoa_evento, pessoa)
-                    if score_pessoa > maior_score:
-                        maior_score = score_pessoa
-                        pessoa_corr = id, pessoa
+        elif evento.event_type in ["linger", "exit"]:
+            maior_score = 0
+            for id, pessoa in zona_atual["pessoas"].items():
+                score_pessoa = loja.calc_corresp_pessoa(pessoa_evento, pessoa)
+                if score_pessoa > maior_score:
+                    maior_score = score_pessoa
+                    pessoa_corr = id, pessoa
 
         
         if pessoa_corr == (None, None):
