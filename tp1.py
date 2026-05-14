@@ -1,6 +1,7 @@
 import json
 import pandas as pd
 import heapq
+from itertools import combinations
 
 from datetime import datetime, timedelta
 
@@ -17,6 +18,67 @@ class Pessoa:
         self.linger_time = evento.duration_s
         
 
+class MatrizTempos:
+    """
+    Classe responsável por calcular e armazenar os tempos de deslocação 
+     entre zonas, otimizando para não recalcular trajetos simétricos
+    """
+    def __init__(self, mapa_zonas: dict):
+        self.mapa_zonas = mapa_zonas
+        self._tempos = {}
+        self._precalcular()
+
+
+    def _precalcular(self):
+        """
+        Calcula e armazena o tempo mínimo entre todos os pares de zonas,
+         utilizando uma chave ordenada para garantir que o trajeto seja tratado 
+         como simétrico (A para B é igual a B para A) e evitar cálculos duplicados
+        """
+        zonas = list(self.mapa_zonas.keys())
+
+        # Distância de uma zona para si mesma
+        for zona in zonas:
+            self._tempos[(zona, zona)] = 0
+
+        # Calcular combinações únicas de pares de zonas
+        for origem, destino in combinations(zonas, 2):
+            tempo = self._dijkstra(origem, destino)
+            
+            # Usa-se um tuplo ordenado como chave para garantir simetria
+            chave = tuple(sorted((origem, destino)))
+            self._tempos[chave] = tempo
+
+
+    def _dijkstra(self, origem: str, destino: str) -> int:
+        fila_prioridade = [(0, origem)]
+        zonas_visitadas = set()
+
+        while fila_prioridade:
+            tempo_atual, zona_atual = heapq.heappop(fila_prioridade)
+
+            if zona_atual in zonas_visitadas:
+                continue
+
+            zonas_visitadas.add(zona_atual)
+
+            if zona_atual == destino:
+                return tempo_atual
+
+            vizinhos = self.mapa_zonas[zona_atual]["walk_seconds"].items()
+            for zona_vizinha, tempo_caminhada in vizinhos:
+                if zona_vizinha not in zonas_visitadas:
+                    novo_tempo = tempo_atual + tempo_caminhada
+                    heapq.heappush(fila_prioridade, (novo_tempo, zona_vizinha))
+
+        raise ValueError(f"Mapa inválido: não existe ligação possível entre {origem} e {destino}.")
+
+
+    def get_tempo(self, origem: str, destino: str) -> int:
+        chave = tuple(sorted((origem, destino)))
+        return self._tempos[chave]
+
+
 class Mapa:
     def __init__(self, zonas: dict):
         # Importar zonas e adicionar lista pessoas por zona
@@ -27,15 +89,10 @@ class Mapa:
         
 
         # Matriz dos tempos entre zonas
-        self.tempos = {}
-
-        for origem in self.mapa.keys():
-            self.tempos[origem] = {}
-
-            for destino in self.mapa.keys():
-                self.tempos[origem][destino] = self.dijkstra(origem, destino)
+        self.matriz_tempos = MatrizTempos(self.mapa)
 
 
+        # Zonas Ativas        
         self.zonas_ativas: dict[str, dict] = dict()
         """
         Lista de Nodes que têm la alguem
@@ -47,98 +104,39 @@ class Mapa:
          cujas, ATÉ entrarem noutra zona com sucesso, ficam aqui.
 
         """
-    
-    def precalcular_tempos(self):
-        tempos = {}
-
-        for origem in self.mapa.keys():
-            tempos[origem] = {}
-
-            for destino in self.mapa.keys():
-                tempos[origem][destino] = self.dijkstra(origem, destino)
-
-        return tempos
-
-    
-    def dijkstra(self, origem: str, destino: str) -> float:
-        """
-        Calcula o menor tempo de caminhada entre duas zonas usando o
-         algoritmo de Dijkstra.
-        """
-        # Mesmo ponto
-        if origem == destino:
-            return 0
-
-        # (tempo_acumulado, zona)
-        fila_prioridade = [(0, origem)]
-
-        # Zonas já processadas
-        zonas_visitadas = set()
-
-        while fila_prioridade:
-
-            # Zona com menor custo atual
-            tempo_atual, zona_atual = heapq.heappop(fila_prioridade)
-
-            # Ignorar se já foi visitada
-            if zona_atual in zonas_visitadas:
-                continue
-
-            zonas_visitadas.add(zona_atual)
-
-            # Encontrou o destino
-            if zona_atual == destino:
-                return tempo_atual
-
-            # Explorar vizinhos
-            vizinhos = self.mapa[zona_atual].get("walk_seconds", {})
-            for zona_vizinha, tempo_caminhada in vizinhos.items():
-
-                if zona_vizinha in zonas_visitadas:
-                    continue
-
-                novo_tempo = tempo_atual + tempo_caminhada
-
-                heapq.heappush(
-                    fila_prioridade,
-                    (novo_tempo, zona_vizinha)
-                )
-
-        # Não existe caminho possível
-        return float("inf")
 
 
     def diferenca_tempo(self, pessoa_evento: Pessoa , pessoa: Pessoa) -> int:
         """
         Calcula a diferença do tempo entre duas pessoas, dando um 
-         score de 0-30 do quão perto do caminho original percorrido
-         está o esse tempo
+         score de 0-40 do quão perto do caminho original percorrido
+         está o esse tempo, tendo uma tolerância de 120s de atraso
         """
+        # Score maximo possivel
+        MAX_SCORE = 40
 
-        #   Difereça entre timestamps
+        # Segundos de tolerância
+        MAX_EXTRA = 120
+
+        # Difereça entre timestamps
         timestamp_evento = pessoa_evento.last_timestamp
         timestamp_pessoa = pessoa.last_timestamp
 
         timestamp_diff = abs((timestamp_evento - timestamp_pessoa).total_seconds())
         
-        #   Tempo que demora entre as duas zonas (somando percursos intermédios)
-        base_time = self.tempos[pessoa.last_zone][pessoa_evento.last_zone]
+        # Tempo que demora entre as duas zonas
+        base_time = self.matriz_tempos.get_tempo(pessoa.last_zone, pessoa_evento.last_zone)
         
-        # Se for infinito, significa que não há caminho possível entre as zonas
-        if base_time == float('inf'):
-            return 0 
+        # Chegou antes do tempo mínimo de caminhada
+        if timestamp_diff < base_time:
+            return 5
+
+        # Chegou mais devagar — sempre aceitável, penaliza progressivamente
+        extra_time = timestamp_diff - base_time
+
         
-        #   Diferença do esperado
-        erro = abs(timestamp_diff - base_time)
 
-        #   score máximo = 30
-        #   tolerância máxima = 5 segundos
-        MAX_SCORE = 30
-        MAX_ERRO = 3
-
-        score = int(max(0, MAX_SCORE * (1 - abs(erro) / MAX_ERRO)))
-
-        return score
+        return int(max(0, MAX_SCORE * (1 - extra_time / MAX_EXTRA)))
 
     def calc_corresp_pessoa(self, pessoa_evento: Pessoa , pessoa: Pessoa):
         """
@@ -162,7 +160,7 @@ class Mapa:
                 # Certificação caso seja linger
                 if pessoa.last_event == "linger":
                     horario_entrada = pessoa.last_pessoa.last_timestamp
-                    horario_saida = horario_entrada + timedelta(seconds=pessoa_evento.linger_time)
+                    horario_saida = horario_entrada + timedelta(seconds=pessoa.linger_time)
 
                     if horario_saida == pessoa_evento.last_timestamp:
                         pontuacao_total += 30
@@ -190,7 +188,7 @@ class Mapa:
                     return 0
 
                 if pessoa_evento.last_zone == pessoa.last_zone:
-                    return 30
+                    pontuacao_total += 30
 
         # Certificação o genero 
         if pessoa_evento.genero == pessoa.genero:
@@ -203,47 +201,34 @@ class Mapa:
 
         return pontuacao_total
 
-    def procurar_pessoa_arredores(self, evento: dict, saltos_maximos=2) -> tuple[int, Pessoa]:
+    def procurar_pessoa_arredores(self, evento) -> tuple[int, Pessoa]:
         """
-        Procura a pessoa mais legível à do evento com base nas zonas que
-        rodeiam a zona do evento, até um determinado número de saltos (profundidade).
+        Procura pela pessoa que faz mais sentido para o dado evento,
+         sendo as pessoas escolhidas dentro da zonas_ativas.
+        
+        Ha o intervalo perfeito que é o ceiling que dita que ja encontrou
+         a pessoa perfeita a partir do score que vai de 0-100
         """
-        zona_atual_id = evento.zone_id
+        INTERVALO_PERFEITO = 95
+
         pessoa_evento = Pessoa(evento)
         pessoa_corr = None, None
         maior_score = 0
 
-        # 1. Obter zonas candidatas (Busca em Largura / BFS)
-        zonas_candidatas = set()
-        fila = [(zona_atual_id, 0)] # Tuplo: (id_da_zona, distancia_em_saltos)
-        visitados = set([zona_atual_id])
-
-        while fila:
-            zona_id, saltos = fila.pop(0)
-            
-            # Adiciona a zona atual às candidatas (exceto a zona onde o evento ocorreu)
-            if saltos > 0:
-                zonas_candidatas.add(zona_id)
-            
-            # Se ainda não atingimos o limite de saltos, expandimos para os vizinhos
-            if saltos < saltos_maximos:
-                for vizinho in self.mapa[zona_id].get("adjacent", []):
-                    if vizinho not in visitados:
-                        visitados.add(vizinho)
-                        fila.append((vizinho, saltos + 1))
-
-        # 2. Procurar por pessoas nas zonas candidatas
-        for nome_zona in zonas_candidatas:
-            # Zona não tem ninguém ativo, avançar
-            if nome_zona not in self.zonas_ativas:
+        for nome_zona, zona in self.zonas_ativas.items():
+            if nome_zona == evento.zone_id:
                 continue
 
-            for id, pessoa in self.mapa[nome_zona]["pessoas"].items():
-                score_pessoa = self.calc_corresp_pessoa(pessoa_evento, pessoa)
-                if score_pessoa > maior_score:
-                    maior_score = score_pessoa
-                    pessoa_corr = id, pessoa
+            for id, pessoa in zona["pessoas"].items():
+                score = self.calc_corresp_pessoa(pessoa_evento, pessoa)
+
+                if score >= INTERVALO_PERFEITO:
+                    return id, pessoa
             
+                if score > maior_score:
+                    maior_score = score
+                    pessoa_corr = id, pessoa
+
         return pessoa_corr
 
     def limpar_inativos(self, timestamp_atual: datetime):
@@ -330,11 +315,16 @@ if __name__ == "__main__":
             continue
         
 
-        # Mudar a pessoas de zona
+        # Mudar a pessoa de zona
         loja.mapa[pessoa_corr[1].last_zone]["pessoas"].pop(pessoa_corr[0])
         if len(loja.mapa[pessoa_corr[1].last_zone]["pessoas"]) == 0:
             loja.zonas_ativas.pop(pessoa_corr[1].last_zone)
         
+        # Caso tenha saido da loja só adicionar aos ids atribuidos e não voltar a adicionar
+        if evento.event_type == "exit" and evento.zone_id == "Z_CK":
+            ids_atribuidos.append(pessoa_corr[0])
+            continue
+
         zona_atual["pessoas"][pessoa_corr[0]] = Pessoa(evento, pessoa_corr[1])
 
         # Adicionar id à lista

@@ -19,7 +19,7 @@ MAX_HISTORICO = 5
 class VisualizadorTrajetorias:
     def __init__(self, root):
         self.root = root
-        self.root.title("Retail Intelligence - Analisador de Trajetórias (Baseado em TP1)")
+        self.root.title("Analisador de Trajetórias")
         self.root.geometry("1300x800")
 
         self.historico_rastos = {} 
@@ -265,7 +265,6 @@ class VisualizadorTrajetorias:
 
         nx.draw_networkx_labels(self.G, self.pos, ax=self.ax, font_size=8, font_weight='bold')
 
-        self.ax.set_title("Retail Intelligence - Fluxo Dinâmico", pad=20)
         self.ax.axis("off")
         self.canvas.draw()
 
