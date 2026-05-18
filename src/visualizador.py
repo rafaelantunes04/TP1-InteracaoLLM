@@ -2,7 +2,6 @@ import json
 import pandas as pd
 import tkinter as tk
 from tkinter import ttk, messagebox
-from datetime import datetime
 
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
@@ -10,9 +9,7 @@ import matplotlib.cm as cm
 import matplotlib.colors as mcolors
 import networkx as nx
 
-# --- IMPORTAÇÃO DA TUA LÓGICA DO TP1 ---
-# Certifica-te que o ficheiro tp1.py está na mesma pasta
-from tp1 import Pessoa, Mapa
+from stitcher import Pessoa, Mapa
 
 MAX_HISTORICO = 5
 
@@ -24,13 +21,13 @@ class VisualizadorTrajetorias:
 
         self.historico_rastos = {} 
         self.cores_pessoas = {}
-        self.historico_ui_eventos = []  # Lista de dicts {acao, detalhes} dos últimos N eventos
+        self.historico_ui_eventos = []
 
         try:
-            with open("zones.json", "r", encoding="utf-8") as f:
+            with open("C:/Users/Rafael Antunes/Desktop/Cadeiras IA/Interação com Modelos de Larga Escala/tp1/data/zones.json", "r", encoding="utf-8") as f:
                 self.info_zonas = json.load(f)
             
-            self.df_eventos = pd.read_csv("events.csv", dtype={
+            self.df_eventos = pd.read_csv("C:/Users/Rafael Antunes/Desktop/Cadeiras IA/Interação com Modelos de Larga Escala/tp1/data/events.csv", dtype={
                 "event_id": "str",
                 "timestamp": "str",
                 "zone_id": "category",
