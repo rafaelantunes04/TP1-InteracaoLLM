@@ -1,0 +1,67 @@
+
+EXEMPLOS DE INSIGHTS — aprende a diferença entre bom e mau:
+
+=== MAU INSIGHT (genérico, vago) ===
+{
+  "titulo": "Tráfego elevado ao fim de semana",
+  "observacao": "A loja teve mais clientes ao fim de semana.",
+  "implicacao": "É necessário mais atenção ao serviço.",
+  "recomendacao": "Melhorar o atendimento ao cliente.",
+  "urgencia": "esta_semana",
+  "confianca": 0.9
+}
+Porque é mau: sem números, sem zona específica, recomendação não executável.
+
+=== BOM INSIGHT (específico, acionável) ===
+{
+  "titulo": "Sábado concentra 18% da afluência semanal",
+  "observacao": "Sábado registou 966 visitantes únicos vs. média diária de 779. O pico ocorre às 12h–13h com 658 visitantes nessa janela horária.",
+  "implicacao": "Subafetação de recursos às sextas pode criar gargalos de checkout que se prolongam para o sábado de manhã.",
+  "recomendacao": "Escalar pessoal nas caixas em +2 colaboradores das 11h30 às 13h30 aos sábados; rever a grelha de turnos da sexta-feira à tarde.",
+  "urgencia": "esta_semana",
+  "confianca": 1.0
+}
+Porque é bom: número exato (966), comparação (média 779), janela horária precisa, ação concreta com horário.
+
+=== MAU INSIGHT (anomalia vaga) ===
+{
+  "titulo": "Anomalia detetada na loja",
+  "observacao": "Houve uma variação invulgar numa zona.",
+  "implicacao": "Pode indicar um problema.",
+  "recomendacao": "Investigar a situação.",
+  "urgencia": "imediata",
+  "confianca": 0.6
+}
+Porque é mau: não identifica zona, hora, magnitude, nem ação específica.
+
+=== BOM INSIGHT (anomalia específica) ===
+{
+  "titulo": "Z_S5 às 19h: pico anómalo de tráfego (z=6.42)",
+  "observacao": "Z_S5 registou 18 visitas às 19h no dia 7, contra uma média de 8.33 nos dias anteriores — desvio de +116%, z-score de 6.42.",
+  "implicacao": "Afluência pontual desta magnitude sugere evento externo (promoção não comunicada, produto viral em redes sociais) ou falha de deteção (contagem duplicada).",
+  "recomendacao": "Verificar logs de câmara de Z_S5 entre 18h50–19h10 do dia 7; cruzar com registos de vendas nessa zona para confirmar ou descartar duplicação.",
+  "urgencia": "imediata",
+  "confianca": 0.85
+}
+Porque é bom: zona, hora, valores exatos, z-score, magnitude em %, hipóteses alternativas, ação verificável.
+
+=== MAU INSIGHT (demográfico) ===
+{
+  "titulo": "Clientes mais velhos ficam mais tempo",
+  "observacao": "Seniores têm dwell time maior.",
+  "implicacao": "Podem precisar de mais ajuda.",
+  "recomendacao": "Formar melhor os colaboradores.",
+  "urgencia": "proximo_mes",
+  "confianca": 0.7
+}
+Porque é mau: comparação sem números, recomendação vaga.
+
+=== BOM INSIGHT (demográfico) ===
+{
+  "titulo": "Seniores passam 37s a mais em Z_N7 do que a média geral",
+  "observacao": "Dwell time médio de seniores em Z_N7 é 217s vs. 182s da média geral (+19%). Nas horas 17h–18h o segmento sénior representa 13% do tráfego, acima dos 9% habituais.",
+  "implicacao": "Z_N7 pode ter dificuldades de navegação (sinalética, disposição de produto) que afetam desproporcionalmente clientes mais velhos.",
+  "recomendacao": "Auditar sinalética de Z_N7 esta semana; considerar reposicionamento de produtos de alta rotação para altura de prateleira acessível (80–140cm).",
+  "urgencia": "esta_semana",
+  "confianca": 0.8
+}

@@ -1,0 +1,6 @@
+REGRAS OBRIGATÓRIAS:
+1. Usa APENAS os dados fornecidos. NUNCA inventes valores.
+2. Cada insight deve ter números concretos retirados das métricas.
+3. Cada recomendação deve ser executável sem interpretação adicional.
+4. Responde APENAS com o JSON válido pedido, sem texto antes ou depois.
+5. Escala de confiança: 1.0 = dado direto das métricas; 0.7 = inferência razoável; 0.5 = hipótese.

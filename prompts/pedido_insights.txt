@@ -1,0 +1,9 @@
+
+Gera 8 a 12 insights acionáveis em português, cobrindo obrigatoriamente:
+- Pelo menos 1 insight de tráfego
+- Pelo menos 2 insights de zona (melhor e pior)
+- Pelo menos 1 insight de funil
+- Pelo menos 2 anomalias (escolhe as de maior z_score absoluto)
+- Pelo menos 1 insight demográfico
+
+Devolve APENAS o seguinte JSON (sem texto antes ou depois):

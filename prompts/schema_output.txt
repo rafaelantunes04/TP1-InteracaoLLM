@@ -1,0 +1,15 @@
+{
+  "insights": [
+    {
+      "id": "INS_001",
+      "categoria": "trafego|zona|funil|anomalia|demografico",
+      "titulo": "frase curta que resume o insight",
+      "observacao": "o que os dados mostram: factos, números concretos",
+      "implicacao": "o que isto significa operacionalmente",
+      "recomendacao": "ação concreta que o gestor pode tomar",
+      "urgencia": "imediata|esta_semana|proximo_mes",
+      "confianca": 0.0
+    }
+  ],
+  "resumo_executivo": "3 bullets com os insights mais importantes"
+}

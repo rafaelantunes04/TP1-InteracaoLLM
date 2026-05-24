@@ -9,8 +9,7 @@ ZONAS = {
     "caixas":     {"Z_C1", "Z_C2", "Z_C3", "Z_CK"}
 }
 
-
-def main():
+if __name__ == "__main__":
     # Argumentos
     parser = argparse.ArgumentParser()
     parser.add_argument("--input",  required=True)
@@ -149,6 +148,3 @@ def main():
         json.dump(metricas, f, ensure_ascii=False, indent=2, default=str)
 
     print(f"Sucesso! {args.output} gerado com base em {args.input}.")
-
-if __name__ == "__main__":
-    main()
