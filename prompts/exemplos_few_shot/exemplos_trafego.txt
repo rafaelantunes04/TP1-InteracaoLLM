@@ -1,0 +1,86 @@
+EXEMPLO 1 - MAU INSIGHT
+{
+  "id": "INS_T1",
+  "categoria": "trafego",
+  "titulo": "A loja teve bastante movimento esta semana",
+  "observacao": "Houve muitos visitantes ao longo da semana, especialmente nos dias mais movimentados.",
+  "implicacao": "Pode ser necessário reforçar a equipa em alguns momentos.",
+  "recomendacao": "Considerar ter mais funcionários disponíveis.",
+  "urgencia": "esta_semana",
+  "confianca": 0.5
+}
+PROBLEMA: "bastante movimento" não diz nada - faltam números absolutos,
+comparação com semanas anteriores e identificação dos dias concretos.
+A recomendação é vaga demais para ser executável.
+
+
+
+EXEMPLO 2 - BOM INSIGHT
+{
+  "id": "INS_T2",
+  "categoria": "trafego",
+  "titulo": "Sábado foi o dia de maior afluência com 1 847 visitantes únicos",
+  "observacao": "No sábado (2025-03-15) registaram-se 1 847 visitantes únicos, 34% acima da média diária semanal de 1 378. O pico ocorreu entre as 11h e as 13h, com 312 visitantes nessa janela de 2 horas.",
+  "implicacao": "A loja opera próximo da capacidade de atendimento ao sábado de manhã; tempos de espera nas caixas aumentam e a experiência de compra pode degradar-se.",
+  "recomendacao": "Escalar 2 operadores de caixa adicionais aos sábados entre as 10h30 e as 13h30. Analisar se campanhas promocionais coincidem com este pico e, se sim, avisar a equipa de reposição com antecedência.",
+  "urgencia": "esta_semana",
+  "confianca": 0.92
+}
+
+EXEMPLO 3 - MAU INSIGHT
+{
+  "id": "INS_T3",
+  "categoria": "trafego",
+  "titulo": "Segunda-feira foi o dia mais calmo",
+  "observacao": "Às segundas-feiras a loja tem menos gente do que noutros dias.",
+  "implicacao": "Pode ser uma boa altura para fazer limpezas ou reposição.",
+  "recomendacao": "Usar as segundas para tarefas internas.",
+  "urgencia": "proximo_mes",
+  "confianca": 0.4
+}
+PROBLEMA: sem dados quantitativos, sem comparação, e a recomendação
+é óbvia - não acrescenta valor ao gestor.
+
+
+
+EXEMPLO 4 - BOM INSIGHT
+{
+  "id": "INS_T4",
+  "categoria": "trafego",
+  "titulo": "Segunda-feira regista 41% menos tráfego que a média semanal - janela ideal para reposição",
+  "observacao": "A segunda-feira teve em média 812 visitantes únicos, contra uma média semanal de 1 378. O horário entre as 09h00 e as 11h00 de segunda-feira concentra apenas 6% do tráfego diário (~49 visitantes), o intervalo mais baixo de toda a semana.",
+  "implicacao": "Esta janela tem impacto mínimo na experiência de compra e é a mais segura para movimentar paletes e reorganizar lineares sem interferir com clientes.",
+  "recomendacao": "Agendar receção de fornecedores, reposição de lineares e inventário físico para segunda-feira entre as 09h00 e as 11h00. Evitar este tipo de operações ao sábado de manhã, quando o tráfego é 3,8x superior.",
+  "urgencia": "esta_semana",
+  "confianca": 0.89
+}
+
+
+
+EXEMPLO 5 - MAU INSIGHT
+{
+  "id": "INS_T5",
+  "categoria": "trafego",
+  "titulo": "Hora de pico identificada",
+  "observacao": "A hora de pico da loja ocorre ao fim da tarde.",
+  "implicacao": "Nessa hora há mais pessoas na loja.",
+  "recomendacao": "Preparar a loja para receber mais clientes.",
+  "urgencia": "imediata",
+  "confianca": 0.6
+}
+PROBLEMA: "fim da tarde" não é uma hora concreta, não há números,
+e "preparar a loja" não descreve nenhuma ação específica.
+
+
+
+EXEMPLO 6 - BOM INSIGHT
+{
+  "id": "INS_T6",
+  "categoria": "trafego",
+  "titulo": "Duplo pico diário às 11h–12h e às 17h–18h com padrão consistente nos 7 dias",
+  "observacao": "Em todos os 7 dias analisados, o tráfego apresenta dois picos distintos: um matutino (11h–12h, média 187 visitantes/hora) e um vespertino (17h–18h, média 203 visitantes/hora). O vale entre os dois picos (14h–15h) regista em média 89 visitantes/hora - menos de metade do pico vespertino.",
+  "implicacao": "O padrão bi-modal é estável e previsível, permitindo planeamento de escala de pessoal com alta fiabilidade. O pico vespertino é ligeiramente mais intenso que o matutino.",
+  "recomendacao": "Garantir escala completa das 10h30 às 12h30 e das 16h30 às 18h30 todos os dias. Usar o vale das 13h30–15h30 para pausas de pessoal. Considerar promoções de 'hora tranquila' neste intervalo para redistribuir tráfego.",
+  "urgencia": "esta_semana",
+  "confianca": 0.95
+}

@@ -1,0 +1,87 @@
+EXEMPLO 1 - MAU INSIGHT
+{
+  "id": "INS_F1",
+  "categoria": "funil",
+  "titulo": "Nem todos os clientes chegam à caixa",
+  "observacao": "Uma parte dos visitantes que entram na loja não chega a efetuar compra nas caixas.",
+  "implicacao": "Existem perdas no funil de conversão.",
+  "recomendacao": "Melhorar a experiência de compra para aumentar as conversões.",
+  "urgencia": "esta_semana",
+  "confianca": 0.5
+}
+PROBLEMA: não quantifica a taxa de conversão, não identifica onde
+o funil perde mais clientes, e a recomendação é completamente vaga.
+
+
+
+EXEMPLO 2 - BOM INSIGHT
+{
+  "id": "INS_F2",
+  "categoria": "funil",
+  "titulo": "Taxa de conversão semanal de 67% - 3 327 dos 9 642 visitantes não chegaram às caixas",
+  "observacao": "Dos 9 642 visitantes únicos que entraram pela Z_E1 ou Z_E2 durante a semana, 6 460 (67%) chegaram a uma zona Z_C ou Z_CK. Os restantes 3 182 (33%) saíram sem registo de passagem por qualquer zona de checkout. A taxa de conversão mais baixa ocorreu ao domingo (61%) e a mais alta à quarta-feira (72%).",
+  "implicacao": "1 em cada 3 visitantes sai sem comprar. Se a média de conversão puder subir 5 pontos percentuais (para 72%), isso equivale a ~480 transações adicionais por semana com o volume atual.",
+  "recomendacao": "Analisar as trajetórias dos 33% não-convertidos para identificar a última zona visitada antes de saírem. Se a maioria abandona nas zonas Z_N (corredores), o problema pode ser de produto ou preço; se abandonam em Z_S (secções de produto), pode ser de disponibilidade de stock.",
+  "urgencia": "esta_semana",
+  "confianca": 0.90
+}
+
+
+
+EXEMPLO 3 - MAU INSIGHT
+{
+  "id": "INS_F3",
+  "categoria": "funil",
+  "titulo": "Clientes jovens tendem a não comprar",
+  "observacao": "Os clientes mais jovens têm menos probabilidade de chegarem à caixa.",
+  "implicacao": "Este segmento pode não estar a encontrar os produtos que procura.",
+  "recomendacao": "Adaptar a oferta para clientes mais jovens.",
+  "urgencia": "proximo_mes",
+  "confianca": 0.4
+}
+PROBLEMA: "clientes mais jovens" não é definido, não há percentagens,
+e "adaptar a oferta" não é uma ação executável.
+
+
+
+EXEMPLO 4 - BOM INSIGHT
+{
+  "id": "INS_F4",
+  "categoria": "funil",
+  "titulo": "Teenagers têm taxa de conversão de 41% - 26 pontos abaixo da média geral",
+  "observacao": "O segmento teenager (estimado por age_range) representa 8,3% dos visitantes (800 visitas na semana). A sua taxa de conversão para checkout é 41%, contra uma média geral de 67%. O abandono concentra-se maioritariamente depois de Z_S2 e Z_S4 - zonas de bebidas e snacks - onde o dwell time deste segmento é de 5,2 minutos (o mais alto por zona e por segmento).",
+  "implicacao": "Teenagers passam tempo relevante em Z_S2 e Z_S4 mas não convertem. Pode indicar barreiras de preço, ausência de produtos específicos do segmento ou falta de opções de pagamento (sem dinheiro/multibanco).",
+  "recomendacao": "Introduzir produtos de menor valor unitário (<1,50€) em Z_S2 e Z_S4. Considerar sinalização com linguagem visual (sem texto denso). Verificar se o MBWay/pagamento digital está disponível nas caixas próximas a estas zonas.",
+  "urgencia": "proximo_mes",
+  "confianca": 0.76
+}
+
+
+
+EXEMPLO 5 - MAU INSIGHT
+{
+  "id": "INS_F5",
+  "categoria": "funil",
+  "titulo": "O funil tem perdas no meio",
+  "observacao": "Entre a entrada e a caixa, muitos clientes desaparecem do funil.",
+  "implicacao": "Algo está a impedir os clientes de completar a compra.",
+  "recomendacao": "Investigar o que está a acontecer no meio da loja.",
+  "urgencia": "imediata",
+  "confianca": 0.5
+}
+PROBLEMA: "perdas no meio" e "desaparecem" são metáforas sem
+significado analítico; não identifica a zona nem o segmento.
+
+
+
+EXEMPLO 6 - BOM INSIGHT
+{
+  "id": "INS_F6",
+  "categoria": "funil",
+  "titulo": "Z_N5 é o ponto de maior abandono do funil - 18% dos visitantes que entram neste corredor não continuam",
+  "observacao": "Dos 7 821 visitantes que passam por Z_N5 ao longo da semana, 1 408 (18%) não têm eventos registados em nenhuma zona posterior - a sua trajetória termina em Z_N5 ou nas zonas imediatamente adjacentes (Z_S3, Z_S4). Este fenómeno é mais acentuado ao fim de tarde (16h–19h) quando representa 24% dos que passam por Z_N5 nesse horário.",
+  "implicacao": "Z_N5 funciona como um 'buraco negro' no funil - os clientes chegam mas não avançam. Pode ser consequência de um bottleneck físico (corredor estreito com carrinhos/paletes), falta de sinalização clara para as secções seguintes, ou simplesmente um ponto de desistência por cansaço.",
+  "recomendacao": "Fazer uma inspeção física de Z_N5 ao fim de tarde: verificar obstruções, largura de passagem, sinalização. Se o corredor estiver desobstruído, testar a colocação de uma indicação visual clara para as secções mais populares.",
+  "urgencia": "imediata",
+  "confianca": 0.84
+}

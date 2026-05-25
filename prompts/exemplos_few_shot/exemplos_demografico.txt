@@ -1,0 +1,89 @@
+EXEMPLO 1 — MAU INSIGHT
+{
+  "id": "INS_D1",
+  "categoria": "demografico",
+  "titulo": "As mulheres passam mais tempo na loja",
+  "observacao": "As clientes do sexo feminino tendem a demorar mais nas suas visitas.",
+  "implicacao": "As mulheres são um segmento mais valioso para a loja.",
+  "recomendacao": "Focar o marketing nas clientes femininas.",
+  "urgencia": "proximo_mes",
+  "confianca": 0.6
+}
+PROBLEMA: sem números, sem comparação de tempo médio concreto,
+e "focar o marketing nas clientes femininas" ignora os homens sem
+justificação. A ilação "mais valioso" não está suportada pelos dados.
+
+
+
+EXEMPLO 2 — BOM INSIGHT
+{
+  "id": "INS_D2",
+  "categoria": "demografico",
+  "titulo": "Clientes F têm dwell time médio 22% superior ao M nas zonas Z_S (28,4 min vs. 23,2 min)",
+  "observacao": "Nas zonas de produto Z_S1–Z_S7, o dwell time médio acumulado por visita é 28,4 minutos para o segmento F e 23,2 minutos para o segmento M — uma diferença de 22%. A diferença é mais acentuada em Z_S3 (F: 6,1 min; M: 3,2 min) e Z_S5 (F: 5,8 min; M: 2,9 min). Nota: estes valores têm margem de erro devido à taxa de classificação incorreta de ~8% no atributo gender.",
+  "implicacao": "O segmento F passa substancialmente mais tempo nas zonas de produto. Isto pode refletir maior propensão para explorar a oferta ou maior dificuldade em encontrar produtos. As zonas Z_S3 e Z_S5 são onde a diferença é mais expressiva.",
+  "recomendacao": "Verificar se Z_S3 e Z_S5 contêm categorias de produto com apelo diferenciado por género. Se sim, avaliar se a disposição e sinalização dessas zonas está otimizada para o segmento com maior dwell time. Não reduzir investimento no segmento M — representa 48% dos visitantes.",
+  "urgencia": "proximo_mes",
+  "confianca": 0.79
+}
+
+
+
+EXEMPLO 3 — MAU INSIGHT
+{
+  "id": "INS_D3",
+  "categoria": "demografico",
+  "titulo": "Há mais adultos do que outras faixas etárias",
+  "observacao": "A maioria dos clientes são adultos.",
+  "implicacao": "O público-alvo da loja são os adultos.",
+  "recomendacao": "Continuar a focar nos adultos.",
+  "urgencia": "proximo_mes",
+  "confianca": 0.5
+}
+PROBLEMA: "adultos são maioria" é trivialmente esperado numa loja de
+retalho. Não há segmentação por hora, por zona, nem por comportamento.
+A recomendação não acrescenta nada.
+
+
+
+EXEMPLO 4 — BOM INSIGHT
+{
+  "id": "INS_D4",
+  "categoria": "demografico",
+  "titulo": "Seniors concentram-se nas manhãs (09h–11h) com taxa de paragem 71% — o segmento mais engajado da loja",
+  "observacao": "O segmento senior representa 11,4% dos visitantes (1 099 visitas). A sua distribuição horária é marcadamente diferente da média: 58% das visitas de seniors ocorrem entre as 09h00 e as 11h00, quando a média geral é de 16%. A taxa de paragem (dwell linger/total visitas) do segmento senior é 71%, contra 54% da média. O dwell time médio nas zonas Z_S é 7,3 minutos para seniors vs. 4,1 minutos de média geral.",
+  "implicacao": "Seniors visitam a loja principalmente de manhã, param mais vezes e ficam mais tempo em cada zona — são o segmento mais engajado. Este comportamento é uma oportunidade não-explorada: a loja está tipicamente menos cheia neste horário, e os seniors podem beneficiar de atenção personalizada.",
+  "recomendacao": "Considerar um 'Senior Hour' das 09h00 às 10h30 com funcionário disponível para acompanhamento. Avaliar se produtos frequentemente adquiridos por seniors (com base em dwell time em zonas específicas) estão acessíveis a pessoas com mobilidade reduzida.",
+  "urgencia": "proximo_mes",
+  "confianca": 0.82
+}
+
+
+
+EXEMPLO 5 — MAU INSIGHT
+{
+  "id": "INS_D5",
+  "categoria": "demografico",
+  "titulo": "Clientes jovens visitam a loja ao fim do dia",
+  "observacao": "Os clientes mais novos tendem a visitar a loja ao fim da tarde ou à noite.",
+  "implicacao": "Este grupo tem horários diferentes dos outros clientes.",
+  "recomendacao": "Adaptar a oferta para clientes jovens neste horário.",
+  "urgencia": "proximo_mes",
+  "confianca": 0.5
+}
+PROBLEMA: "clientes mais novos" é ambíguo (teenagers? young_adults?),
+"ao fim do dia" não é uma hora, e "adaptar a oferta" não especifica como.
+
+
+
+EXEMPLO 6 — BOM INSIGHT
+{
+  "id": "INS_D6",
+  "categoria": "demografico",
+  "titulo": "Young_adults dominam o tráfego entre 17h–20h representando 43% dos visitantes nesse slot",
+  "observacao": "O segmento young_adult (18–30 anos estimados) representa 28,6% dos visitantes totais da semana. Entre as 17h00 e as 20h00, este segmento sobe para 43% dos visitantes nessa janela — um aumento de 15 pontos percentuais face à sua presença média. O segmento middle_aged (principal faixa etária da loja) desce de 34% de média para 22% neste horário.",
+  "implicacao": "A composição demográfica da loja muda significativamente ao fim do dia. A loja de tarde/noite é essencialmente de young_adults. As estratégias de merchandising, promoções e serviço para esse horário devem ser calibradas para este segmento.",
+  "recomendacao": "Verificar se as promoções e comunicação em-loja das 17h–20h são relevantes para young_adults. Avaliar se as categorias onde este segmento tem maior dwell time (identificar via métricas por zona e segmento) estão bem reabastecidas nesse horário.",
+  "urgencia": "esta_semana",
+  "confianca": 0.85
+}

@@ -1,0 +1,87 @@
+EXEMPLO 1 - MAU INSIGHT
+{
+  "id": "INS_Z1",
+  "categoria": "zona",
+  "titulo": "A zona de frescos teve bastante tráfego",
+  "observacao": "A zona de frescos é uma das mais visitadas da loja.",
+  "implicacao": "Os clientes gostam dos produtos frescos.",
+  "recomendacao": "Manter os produtos frescos bem abastecidos.",
+  "urgencia": "esta_semana",
+  "confianca": 0.5
+}
+PROBLEMA: não identifica a zona pelo ID, não tem números, não compara
+com outras zonas, e a recomendação é trivialmente óbvia.
+
+
+
+EXEMPLO 2 - BOM INSIGHT
+{
+  "id": "INS_Z2",
+  "categoria": "zona",
+  "titulo": "Z_S3 é a zona de produto com maior dwell time médio (4,7 min) mas apenas 38% de taxa de paragem",
+  "observacao": "A zona Z_S3 recebe 1 203 visitantes únicos na semana. Desses, apenas 459 (38%) geram um evento linger - abaixo da média das zonas de produto (54%). Quando param, ficam em média 4,7 minutos, o valor mais alto de todas as zonas Z_S.",
+  "implicacao": "A maioria dos visitantes atravessa Z_S3 sem parar, mas os que param ficam muito tempo. Isto sugere que os produtos interessam a um segmento específico mas a zona pode não estar a capturar a atenção dos restantes - possivelmente por sinalização deficiente ou layout pouco convidativo.",
+  "recomendacao": "Testar novo layout de entrada em Z_S3: deslocar produtos âncora (os que retêm clientes 4,7 min) para a linha de visão à entrada da zona. Avaliar impacto na taxa de paragem após 2 semanas.",
+  "urgencia": "proximo_mes",
+  "confianca": 0.83
+}
+
+
+
+EXEMPLO 3 - MAU INSIGHT
+{
+  "id": "INS_Z3",
+  "categoria": "zona",
+  "titulo": "As caixas estão ocupadas nas horas de pico",
+  "observacao": "Durante as horas mais movimentadas, as zonas de caixa ficam cheias.",
+  "implicacao": "Os clientes podem ter de esperar.",
+  "recomendacao": "Abrir mais caixas quando há filas.",
+  "urgencia": "imediata",
+  "confianca": 0.7
+}
+PROBLEMA: não identifica que caixa, não quantifica o dwell time
+nem o volume, e a recomendação não é acionável sem dados.
+
+
+
+EXEMPLO 4 - BOM INSIGHT
+{
+  "id": "INS_Z4",
+  "categoria": "zona",
+  "titulo": "Z_C2 regista dwell time médio de 4,2 min às quartas entre 12h–13h - 2x acima da média",
+  "observacao": "O dwell time médio em todas as zonas Z_C ao longo da semana é 2,1 minutos. Em Z_C2 às quartas-feiras entre as 12h00 e as 13h00, o dwell time médio sobe para 4,2 minutos, consistente nos 4 dias de quarta disponíveis no dataset. Z_C1 e Z_C3 no mesmo horário mantêm 2,0 e 2,3 minutos, respetivamente.",
+  "implicacao": "Z_C2 é um bottleneck sistémico às quartas ao almoço. Com o volume observado de 67 visitantes/hora nesse slot, uma terceira caixa operacional reduziria o tempo de espera estimado para menos de 2 minutos.",
+  "recomendacao": "Abrir uma terceira caixa (Z_C3 ou caixa expressa) às quartas-feiras das 11h45 às 13h15. Monitorizar dwell time na semana seguinte para confirmar redução.",
+  "urgencia": "imediata",
+  "confianca": 0.91
+}
+
+
+
+EXEMPLO 5 - MAU INSIGHT
+{
+  "id": "INS_Z5",
+  "categoria": "zona",
+  "titulo": "Alguns corredores têm pouco tráfego",
+  "observacao": "Certos corredores de navegação são menos utilizados pelos clientes.",
+  "implicacao": "Esses corredores podem estar mal sinalizados.",
+  "recomendacao": "Melhorar a sinalização na loja.",
+  "urgencia": "proximo_mes",
+  "confianca": 0.4
+}
+PROBLEMA: "alguns corredores" e "certos corredores" não identificam
+nada de concreto. Impossível agir sem saber qual zona.
+
+
+
+EXEMPLO 6 - BOM INSIGHT
+{
+  "id": "INS_Z6",
+  "categoria": "zona",
+  "titulo": "Z_N7 e Z_N9 têm tráfego 60% abaixo da média dos corredores - possível zona morta",
+  "observacao": "As zonas de corredor Z_N registam em média 892 passagens por semana. Z_N7 regista 347 passagens e Z_N9 apenas 318 - respetivamente 61% e 64% abaixo da média. Ambas ficam na ala norte da loja. As zonas de produto adjacentes (Z_S6 e Z_S7) apresentam igualmente as taxas de paragem mais baixas (21% e 19%).",
+  "implicacao": "A ala norte da loja tem um problema estrutural de fluxo de clientes. Os produtos em Z_S6 e Z_S7 têm exposição muito inferior ao potencial - os clientes simplesmente não chegam lá.",
+  "recomendacao": "Colocar um elemento âncora (promoção visível, produto de alta rotação, cheiro/degustação) na entrada da ala norte para atrair fluxo. Considerar reposicionar categorias de alta procura para Z_S6 ou Z_S7 para forçar descoberta da zona.",
+  "urgencia": "esta_semana",
+  "confianca": 0.85
+}

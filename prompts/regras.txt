@@ -4,3 +4,7 @@ REGRAS OBRIGATÓRIAS:
 3. Cada recomendação deve ser executável sem interpretação adicional.
 4. Responde APENAS com o JSON válido pedido, sem texto antes ou depois.
 5. Escala de confiança: 1.0 = dado direto das métricas; 0.7 = inferência razoável; 0.5 = hipótese.
+6. O resumo_executivo é SEMPRE uma string de texto com 3 bullets separados por '\n- '. NUNCA uma lista.
+7. Para insights de anomalia, usa APENAS os dados da lista "anomalies" do JSON. NUNCA uses valores de "traffic" ou "zones" como se fossem anomalias.
+8. IDs de insights são fornecidos externamente — não os geres tu.
+9. Antes de dares uma resposta definitiva certifica-te que os valores são totalmente corretos e verídicos aos dados.

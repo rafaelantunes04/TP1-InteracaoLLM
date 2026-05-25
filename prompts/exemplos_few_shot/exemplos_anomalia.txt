@@ -1,0 +1,86 @@
+EXEMPLO 1 - MAU INSIGHT
+{
+  "id": "INS_A1",
+  "categoria": "anomalia",
+  "titulo": "Houve uma anomalia na loja",
+  "observacao": "No final da semana foi detetada uma situação fora do padrão numa zona da loja.",
+  "implicacao": "Pode ter havido um problema operacional.",
+  "recomendacao": "Verificar o que aconteceu.",
+  "urgencia": "imediata",
+  "confianca": 0.3
+}
+PROBLEMA: não identifica a zona, não indica o dia/hora, não quantifica
+o desvio, e "verificar o que aconteceu" não é uma ação concreta.
+
+
+
+EXEMPLO 2 - BOM INSIGHT
+{
+  "id": "INS_A2",
+  "categoria": "anomalia",
+  "titulo": "Z_N4 registou 0 visitantes no domingo às 16h - 4,8σ abaixo da média habitual de 23",
+  "observacao": "Nos primeiros 6 dias, Z_N4 entre as 16h00 e as 17h00 regista em média 23,2 visitantes/hora com desvio-padrão de 4,8. No domingo (dia 7) às 16h00 o valor foi de 0 visitantes - um desvio de 4,8σ. A anomalia é circunscrita a esta janela horária: às 15h Z_N4 teve 21 visitantes e às 17h teve 19 visitantes.",
+  "implicacao": "Uma queda para zero durante exatamente uma hora, com valores normais imediatamente antes e depois, sugere uma causa física pontual: obstrução do corredor (palete de entrega, equipamento de manutenção), falha temporária de sensor, ou interdição temporária da zona.",
+  "recomendacao": "Consultar o registo de operações de domingo às 16h para identificar se houve entrega de fornecedor ou manutenção em Z_N4. Se não houver registo, verificar se o sensor desta zona apresenta histórico de falhas similares.",
+  "urgencia": "imediata",
+  "confianca": 0.93
+}
+
+
+
+EXEMPLO 3 - MAU INSIGHT
+{
+  "id": "INS_A3",
+  "categoria": "anomalia",
+  "titulo": "Z_S3 teve muita gente num determinado momento",
+  "observacao": "A zona Z_S3 registou um tráfego acima do normal em algum momento da semana.",
+  "implicacao": "Pode ter havido uma promoção ou evento especial.",
+  "recomendacao": "Perceber o que causou o aumento de tráfego.",
+  "urgencia": "esta_semana",
+  "confianca": 0.5
+}
+PROBLEMA: "algum momento da semana" é demasiado vago; não indica
+se é anomalia positiva ou negativa, nem o desvio quantificado.
+
+
+EXEMPLO 4 - BOM INSIGHT
+{
+  "id": "INS_A4",
+  "categoria": "anomalia",
+  "titulo": "Z_S3 teve pico de 147 visitantes na quinta às 10h - 3,2σ acima da média de 67",
+  "observacao": "Nos primeiros 6 dias, Z_S3 entre as 10h00 e as 11h00 regista em média 67,3 visitantes/hora com desvio-padrão de 24,9. Na quinta-feira (dia 5) às 10h00 o valor foi de 147 visitantes - 3,2σ acima da média. O evento está circunscrito a essa hora: às 09h Z_S3 teve 71 visitantes e às 11h teve 74 visitantes.",
+  "implicacao": "Um pico de tráfego concentrado e rápido é consistente com uma ação de marketing (email/push notification enviado de manhã) ou início de promoção relâmpago. Se não for planeado, pode indicar uma ocorrência externa (influencer, post viral) que a loja deve capitalizar.",
+  "recomendacao": "Verificar se houve campanha de marketing nessa quinta de manhã. Se sim, documentar o ROI de tráfego para calibrar futuras campanhas. Se não houver campanha identificada, investigar a origem (redes sociais, media local) para perceber se é replicável.",
+  "urgencia": "esta_semana",
+  "confianca": 0.87
+}
+
+
+
+EXEMPLO 5 - MAU INSIGHT
+{
+  "id": "INS_A5",
+  "categoria": "anomalia",
+  "titulo": "Anomalia detetada nas caixas ao fim de semana",
+  "observacao": "O comportamento das caixas no fim de semana foi diferente do habitual.",
+  "implicacao": "Pode ter havido problemas operacionais.",
+  "recomendacao": "Rever os procedimentos de fim de semana.",
+  "urgencia": "esta_semana",
+  "confianca": 0.4
+}
+PROBLEMA: "diferente do habitual" não é uma anomalia definida -
+falta o desvio em σ, a zona específica (Z_C1? Z_C2?) e a hora exata.
+
+
+
+EXEMPLO 6 - BOM INSIGHT
+{
+  "id": "INS_A6",
+  "categoria": "anomalia",
+  "titulo": "Z_C1 com dwell time médio de 8,7 min no sábado às 12h - 3,7σ acima da média de 2,1 min",
+  "observacao": "O dwell time médio em Z_C1 nos primeiros 6 dias é 2,1 minutos (σ=1,8). No sábado (dia 7) entre as 12h00 e as 13h00, o dwell time médio subiu para 8,7 minutos - 3,7σ acima da média. O tráfego nessa janela horária em Z_C1 foi de 89 visitantes, dentro do normal para um sábado ao almoço.",
+  "implicacao": "O mesmo número de clientes demorou 4x mais tempo na caixa. Não se trata de mais clientes mas de um serviço mais lento - consistente com avaria de terminal de pagamento, operador de caixa inexperiente, ou problema com sistema de faturação.",
+  "recomendacao": "Verificar registo de ocorrências técnicas no sábado ao almoço em Z_C1. Consultar a equipa que estava de serviço. Se não houver registo, monitorizar Z_C1 no próximo sábado com atenção especial entre as 11h30 e as 13h30.",
+  "urgencia": "imediata",
+  "confianca": 0.89
+}
